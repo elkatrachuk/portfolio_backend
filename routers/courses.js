@@ -24,4 +24,17 @@ router.get("/languages/:languageId", async (req, res, next) => {
   }
 });
 
+router.get(
+  "/languages/:languageId/courses/:courseId",
+  async (req, res, next) => {
+    const { courseId } = req.params;
+    try {
+      const course = await Course.findOne({ where: { id: courseId } });
+      res.send(course);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 module.exports = router;
