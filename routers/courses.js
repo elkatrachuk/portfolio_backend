@@ -1,7 +1,9 @@
 const { Router } = require("express");
-const language = require("../models/language");
+const Level = require("../models/").Level;
 const Language = require("../models/").Language;
 const Course = require("../models/").Course;
+const Comment = require("../models/").Comment;
+const User = require("../models/").User;
 
 const router = new Router();
 
@@ -29,7 +31,16 @@ router.get(
   async (req, res, next) => {
     const { courseId } = req.params;
     try {
-      const course = await Course.findOne({ where: { id: courseId } });
+      const course = await Course.findOne({
+        where: { id: courseId },
+        include: [
+          { model: Level },
+          { model: Language },
+          { model: Comment, include: User },
+          { model: User, as: "author" },
+          { model: User, as: "participant" },
+        ],
+      });
       res.send(course);
     } catch (e) {
       next(e);
