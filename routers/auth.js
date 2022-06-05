@@ -3,6 +3,7 @@ const { Router } = require("express");
 const User = require("../models/").User;
 const { SALT_ROUNDS, SECRET } = require("../config/constants");
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = new Router();
 
@@ -47,6 +48,15 @@ router.post("/login", async (req, res, next) => {
   } catch (error) {
     return res.status(400).send({ message: "Something went wrong, sorry" });
   }
+});
+
+// The /me endpoint can be used to:
+// - get the users email & name using only their token
+// - checking if a token is (still) valid
+router.get("/me", authMiddleware, async (req, res) => {
+  // don't send back the password hash
+  delete req.user.dataValues["password"];
+  res.status(200).send({ ...req.user.dataValues });
 });
 
 module.exports = router;

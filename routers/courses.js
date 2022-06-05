@@ -4,6 +4,7 @@ const Language = require("../models/").Language;
 const Course = require("../models/").Course;
 const Comment = require("../models/").Comment;
 const User = require("../models/").User;
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = new Router();
 
@@ -47,5 +48,24 @@ router.get(
     }
   }
 );
+
+router.post("/create-new-course", authMiddleware, async (req, res, next) => {
+  try {
+    const { language, title, description, level, imageUrl } = req.body;
+    const newCourse = await Course.create({
+      languageId: language,
+      title,
+      description,
+      levelId: level,
+      imageUrl,
+      rating: 0,
+      userId: req.user.id,
+    });
+
+    res.send({ newCourse, user: req.user });
+  } catch (e) {
+    next(e);
+  }
+});
 
 module.exports = router;
