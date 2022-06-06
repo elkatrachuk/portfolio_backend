@@ -50,6 +50,17 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.patch("/update-profile", authMiddleware, async (req, res, next) => {
+  try {
+    const { avatar, description, isAuthor } = req.body;
+    const profile = await User.findByPk(req.user.id);
+    await profile.update({ avatar, description, isAuthor });
+    res.send(profile);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // The /me endpoint can be used to:
 // - get the users email & name using only their token
 // - checking if a token is (still) valid

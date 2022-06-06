@@ -2,6 +2,7 @@ const { SECRET } = require("../config/constants");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models").User;
+const Course = require("../models").Course;
 
 const auth = async (req, res, next) => {
   const auth =
@@ -17,7 +18,9 @@ const auth = async (req, res, next) => {
   try {
     // const data = (auth[1]);
     const data = jwt.verify(auth[1], SECRET);
-    const user = await User.findByPk(data.userId);
+    const user = await User.findByPk(data.userId, {
+      include: [{ model: Course, foreignKey: "userId", as: "author" }],
+    });
     if (!user) {
       return res.status(404).send({ message: "User does not exist" });
     }
