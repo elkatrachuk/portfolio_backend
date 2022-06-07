@@ -20,7 +20,14 @@ router.get("/languages", async (req, res, next) => {
 router.get("/languages/:languageId", async (req, res, next) => {
   const { languageId } = req.params;
   try {
-    const courses = await Course.findAll({ where: { languageId } });
+    const { page = 1, limit = 2 } = req.query;
+    const offset = page * limit;
+    let courses;
+    courses = await Course.findAndCountAll({
+      limit,
+      offset,
+      where: { languageId },
+    });
     res.send(courses);
   } catch (e) {
     next(e);
@@ -67,5 +74,20 @@ router.post("/create-new-course", authMiddleware, async (req, res, next) => {
     next(e);
   }
 });
+
+router.patch(
+  "/languages/:languageId/courses/:courseId",
+  async (req, res, next) => {
+    try {
+      const { languageId, courseId } = req.params;
+      const { rating } = req.body;
+      const course = await Course.findByPk(courseId);
+      await course.update({ rating });
+      res.send(course);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 module.exports = router;
