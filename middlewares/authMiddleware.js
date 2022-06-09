@@ -7,7 +7,6 @@ const Course = require("../models").Course;
 const auth = async (req, res, next) => {
   const auth =
     req.headers.authorization && req.headers.authorization.split(" ");
-
   if (!auth || !(auth[0] === "Bearer") || !auth[1]) {
     return res.status(401).send({
       message:
