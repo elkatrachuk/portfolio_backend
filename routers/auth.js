@@ -8,9 +8,9 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const router = new Router();
 
 router.post("/signup", async (req, res, next) => {
-  const { name, email, password, isAuthor } = req.body;
-  const bcryptedPassword = bcrypt.hashSync(password, SALT_ROUNDS);
   try {
+    const { name, email, password, isAuthor } = req.body;
+    const bcryptedPassword = bcrypt.hashSync(password, SALT_ROUNDS);
     const newUser = await User.create({
       name,
       email,

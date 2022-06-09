@@ -26,6 +26,7 @@ router.get("/languages/:languageId", async (req, res, next) => {
     const offset = (page - 1) * limit;
     let whereStatement = { languageId };
     if (filterValues) {
+      // convert string to object
       const filters = JSON.parse(filterValues);
       const { rating, levelId } = filters;
       if (rating) {
