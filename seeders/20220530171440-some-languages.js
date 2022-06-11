@@ -26,7 +26,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          name: "Rybu",
+          name: "Ruby",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

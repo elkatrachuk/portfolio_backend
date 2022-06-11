@@ -66,6 +66,12 @@ module.exports = {
       onDelete: "SET NULL",
       onUpdate: "CASCADE",
     });
+    await queryInterface.addColumn("Languages", "imageUrl", {
+      type: Sequelize.STRING,
+
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
+    });
   },
 
   async down(queryInterface, Sequelize) {
@@ -76,5 +82,6 @@ module.exports = {
     await queryInterface.removeColumn("Comments", "courseId");
     await queryInterface.removeColumn("UsersParticipants", "userId");
     await queryInterface.removeColumn("UsersParticipants", "courseId");
+    await queryInterface.removeColumn("Languages", "imageUrl");
   },
 };
