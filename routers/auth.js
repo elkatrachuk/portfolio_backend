@@ -54,6 +54,9 @@ router.patch("/update-profile", authMiddleware, async (req, res, next) => {
   try {
     const { avatar, description, isAuthor } = req.body;
     const profile = await User.findByPk(req.user.id);
+    if (!profile) {
+      return res.status(404).send({ message: "User wasn't found" });
+    }
     await profile.update({ avatar, description, isAuthor });
     delete profile.dataValues.password;
     res.send(profile);
