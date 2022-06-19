@@ -129,6 +129,29 @@ router.post(
   }
 );
 
+router.delete(
+  "/languages/:languageId/courses/:courseId/delete-participant",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { courseId } = req.params;
+      const userId = req.user.id;
+      // const course = await Course.findByPk(courseId);
+      const participant = await UsersParticipant.findOne({
+        where: { userId, courseId },
+      });
+      await participant.destroy();
+      const updatedParticipants = await Course.findOne({
+        where: { id: courseId },
+        include: [{ model: User, as: "participant" }],
+      });
+      res.send(updatedParticipants);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 router.post(
   "/:courseId/add-comment",
   authMiddleware,
